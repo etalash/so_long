@@ -1,33 +1,43 @@
-NAME = so_long
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-MLX_DIR = ./mlx
-MLX = $(MLX_DIR)/mlx.a
-INCLUDES = -I $(MLX_DIR)/includes
 
-SRC = main.c
-OBJ = $(SRC:.c=.o)
+NAME = so_long
+SRCS = check.c draw.c errors.c frees.c ft_strjoinfree.c key_hook.c main.c map_initialization.c map_validity.c window.c xpms_into_image.c
+OBJ = $(SRCS:.c=.o)
 
-# Rules
-all: $(MLX) $(NAME)
+MLX_HEADER = lib/MLX42/include/MLX42
+MLX_LIB = lib/MLX42/build
 
-$(MLX):
-	@$(MAKE) -C $(MLX_DIR)
+LIBFT_DIR = libft
+LIBFT_NAME = libft.a
+LIBFT = $(LIBFT_DIR)/$(LIBFT_NAME)
 
-$(NAME): $(OBJ) $(MLX)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(MLX) $(INCLUDES)
+all: $(NAME) $(LIBFT)
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(LIBFT):
+	make -C $(LIBFT_DIR)
+
+$(NAME): $(OBJ) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -I $(MLX_HEADER) -L $(MLX_LIB) -lmlx42 -lglfw -pthread -lm -o $(NAME)
+
+mlx :
+	git clone https://github.com/codam-coding-college/MLX42.git
+	cmake -B build && cmake --build build -j4
+
+clean_mlx :
+	rm -rf lib/MLX42
 
 clean:
-	@$(MAKE) -C $(MLX_DIR) clean
 	rm -f $(OBJ)
+	make clean -C $(LIBFT_DIR)
 
-fclean: clean
-	@$(MAKE) -C $(MLX_DIR) fclean
-	rm -f $(NAME)
+fclean:
+	rm -f $(OBJ) $(NAME)
+	make fclean -C $(LIBFT_DIR)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all mlx, mlx_clean clean fclean re
