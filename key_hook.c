@@ -17,7 +17,7 @@ void	up_move(t_map *map)
 		draw_empty_tile(map, x, y);
 		map->string[y][x] = '0';
 		y--;
-		print_movements(map);
+		// print_movements(map);
 		draw_empty_tile(map, x, y);
 		draw_player_tile(map, x, y, UP);
 		map->string[y][x] = 'P';
@@ -42,7 +42,7 @@ void	right_move(t_map *map)
 		draw_empty_tile(map, x, y);
 		map->string[y][x] = '0';
 		x++;
-		print_movements(map);
+		// print_movements(map);
 		draw_empty_tile(map, x, y);
 		draw_player_tile(map, x, y, RIGHT);
 		map->string[y][x] = 'P';
@@ -67,7 +67,7 @@ void	down_move(t_map *map)
 		draw_empty_tile(map, x, y);
 		map->string[y][x] = '0';
 		y++;
-		print_movements(map);
+		// print_movements(map);
 		draw_empty_tile(map, x, y);
 		draw_player_tile(map, x, y, DOWN);
 		map->string[y][x] = 'P';
@@ -92,7 +92,7 @@ void	left_move(t_map *map)
 		draw_empty_tile(map, x, y);
 		map->string[y][x] = '0';
 		x--;
-		print_movements(map);
+		// print_movements(map);
 		draw_empty_tile(map, x, y);
 		draw_player_tile(map, x, y, LEFT);
 		map->string[y][x] = 'P';
@@ -111,10 +111,10 @@ int	key_hook(int keycode, t_map *map)
 	else if (keycode == LEFT)
 		left_move(map);
 	else if (keycode == DOWN)
-		move_down(map);
+		down_move(map);
 	else if (keycode == RIGHT)
-		move_right(map);
+		right_move(map);
 	else if (keycode == UP)
-		move_up(map);
+		up_move(map);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: stalash <stalash@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 17:24:20 by stalash           #+#    #+#             */
-/*   Updated: 2024/10/11 13:57:38 by stalash          ###   ########.fr       */
+/*   Updated: 2024/10/11 14:13:21 by stalash          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@
 # include <math.h>
 # include <stdio.h>
 # include "./lib/libft/libft.h"
-#include "./lib/minilibx-linux/mlx.h"
+# include "./lib/minilibx-linux/mlx.h"
 
 
 # define UP 13
@@ -204,5 +204,7 @@ void	draw_player_tile(t_map *map, int x, int y, int direction);
 void	resume_move(t_map *map, int x, int y, int dir);
 void	print_movements_alt(t_map *map);
 void	ft_win(t_map *map);
+void	xpms_into_image(t_map *map);
+int		ft_destroy(t_map *map);
 
 #endif
