@@ -5,206 +5,103 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: stalash <stalash@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/04 17:24:20 by stalash           #+#    #+#             */
-/*   Updated: 2024/10/11 14:13:21 by stalash          ###   ########.fr       */
+/*   Created: 2024/10/11 12:36:56 by stalash           #+#    #+#             */
+/*   Updated: 2024/10/11 18:44:35 by stalash          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// #ifndef SO_LONG_H
-// # define SO_LONG_H
-
-// # include <fcntl.h>
-// # include <errno.h>
-// # include <stdlib.h>
-// # include <math.h>
-// # include <stdio.h>
-// # include "./lib/libft/libft.h"
-// // # include "./MLX42/include/MLX42/MLX42.h"
-// #include "./lib/minili"
-
-// # define UP 13
-// # define DOWN 1
-// # define LEFT 0
-// # define RIGHT 2
-// # define ESC 53
-// # define IMG_PXL 50
-// # define WND_NAME "so_long"
-
-// typedef struct s_player
-// {
-// 	int	x;
-// 	int	y;
-
-// }	t_player;
-
-// typedef struct s_image
-// {
-// 	void	*empty;
-// 	void	*collectible;
-// 	void	*wall;
-// 	void	*exit;
-// 	void	*player;
-// }	t_image;
-
-// typedef struct s_map
-// {
-// 	int			x;
-// 	int			y;
-// 	int			a;
-// 	int			b;
-// 	int			check_a;
-// 	int			check_b;
-// 	int			p;
-// 	int			fd;
-// 	char		*line;
-// 	char		*file;
-// 	char		**string;
-// 	char		**temp;
-// 	char		*file_name;
-// 	int			out;
-// 	int			moves;
-// 	void		*mlx;
-// 	void		*win_ptr;
-// 	t_image		image;
-// 	t_player	player;
-// }	t_map;
-
-// //     ERRORS & FREES
-
-// void	error_map_elements(t_map *map);
-// void	error_wall(t_map *map);
-// void	error_size(t_map *map);
-// void	err_file_name(void);
-// void	error_openfile(void);
-// void	clean_up(t_map *map);
-// int		ft_free_array(char **ret, int i);
-
-// //     FUCTIONS
-
-// void	map_check(t_map *map);
-// char	*ft_strjoinfree(char *s1, char *s2);
-// void	map_binary(t_map *map);
-// void	map_validity(t_map *map);
-// void	scan_player(t_map *map);
-// void	xpms_into_image(t_map *map);
-// void	build_window(t_map *map);
-// int		key_hook(int keycode, t_map *map);
-// int		ft_destroy(t_map *map);
-// void	draw_empty_tile(t_map *map, int x, int y);
-// void	draw_player_tile(t_map *map, int x, int y, int direction);
-// void	resume_move(t_map *map, int x, int y, int dir);
-// void	print_movements_alt(t_map *map);
-// void	ft_win(t_map *map);
-
-// #endif
-
-// int			fd;
-// char		*line;
-// char		*file;
-// char		**array;
-// char		**copy;
-// char		*filename;
-// int			y;
-// int			x;
-// int			c;
-// int			e;
-// int			c_check;
-// int			e_check;
-// int			p;
-// int			exit;
-// int			moves;
-// void		*mlx;
-// void		*wnd;
-// t_img		img;
-// t_player	player;
-
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
+// my header file
+# include "lib/libft/libft.h"
+# include "lib/MLX42/include/MLX42/MLX42.h"
+# include "lib/ft_printf/ft_printf.h"
+
+// needed header files
+# include <stdlib.h>
+# include <stdbool.h>
+# include <unistd.h>
 # include <fcntl.h>
 # include <errno.h>
-# include <stdlib.h>
-# include <math.h>
-# include <stdio.h>
-# include "./lib/libft/libft.h"
-# include "./lib/minilibx-linux/mlx.h"
 
-
-# define UP 13
-# define DOWN 1
-# define LEFT 0
-# define RIGHT 2
-# define ESC 53
-# define IMG_PXL 50
-# define WND_NAME "so_long"
-
-typedef struct s_player
-{
-	int	x;
-	int	y;
-
-}	t_player;
-
-typedef struct s_image
-{
-	void	*empty;
-	void	*collectible;
-	void	*wall;
-	void	*exit;
-	void	*player;
-}	t_image;
+// game needed vars
+# define SIZE_IMG	40
+# define SIZE_IMG	40
 
 typedef struct s_map
 {
-	int			x;
-	int			y;
-	int			a;
-	int			b;
-	int			check_a;
-	int			check_b;
-	int			p;
-	int			fd;
-	char		*line;
-	char		*file;
-	char		**string;
-	char		**temp;
-	char		*file_name;
-	int			out;
-	int			moves;
-	void		*mlx;
-	void		*win_ptr;
+	char	**line;
+	int		width;
+	int		height;
+	int		p_x;
+	int		p_y;
+	int		d_x;
+	int		d_y;
+	int		prize_len;
+	int		prize_count;
+	int		move;
+}t_map;
+
+typedef struct s_image
+{
+	mlx_image_t	*background;
+	mlx_image_t	*wall;
+	mlx_image_t	*prize;
+	mlx_image_t	*player;
+	mlx_image_t	*door_open;
+	mlx_image_t	*door_closed;
+}t_image;
+
+// ******* the main struct **************
+
+typedef struct s_data
+{
+	t_map		map;
 	t_image		image;
-	t_player	player;
-}	t_map;
+	mlx_t		*mlx;
+}t_data;
 
-//     ERRORS & FREES
+//********** initilize the map **********
 
-void	error_map_elements(t_map *map);
-void	error_wall(t_map *map);
-void	error_size(t_map *map);
-void	err_file_name(void);
-void	error_openfile(void);
-void	clean_up(t_map *map);
-int		ft_free_array(char **ret, int i);
+void	map_init(t_data *data, char *map);
+void	data_init(t_data *data);
+void	save_map(t_data *data, char *map);
+void	set_values(t_data *data);
 
-//     FUCTIONS
+//********* check the map ***************
 
-void	map_check(t_map *map);
-char	*ft_strjoinfree(char *s1, char *s2);
-void	map_binary(t_map *map);
-void	map_validity(t_map *map);
-void	scan_player(t_map *map);
-void	image_struct(t_map *data);
-void	build_window(t_map *map);
-// void	key_hook(mlx_key_data_t key_data, void *pointer);
-int		key_hook(int keycode, t_map *map);
-void	draw_empty_tile(t_map *map, int x, int y);
-void	draw_player_tile(t_map *map, int x, int y, int direction);
-void	resume_move(t_map *map, int x, int y, int dir);
-void	print_movements_alt(t_map *map);
-void	ft_win(t_map *map);
-void	xpms_into_image(t_map *map);
-int		ft_destroy(t_map *map);
+int		check_map(t_data *data);
+int		check_shape(t_data *data);
+int		is_map_closed(t_data *data);
+int		check_item(t_data *data);
+int		valid_character(t_data *data);
+
+//******** some helper functions *********
+
+int		valid_path(t_data *data);
+void	flood_fill(char **map, int y, int x);
+char	**copy_map(t_data *data);
+int		is_map_valid(char **ptr);
+
+//******** display's functions ***********
+
+void	display_background(t_data *data);
+void	display_wall(t_data *data);
+void	display_prize(t_data *data);
+void	display_player_exit(t_data *data);
+
+//******** */ moves && mlx_loop_hook ******
+
+void	key_hook(mlx_key_data_t key_data, void *pointer);
+void	move(t_data *data, int x2, int y2);
+int		remove_prize(t_data *data);
+void	move_image(t_data *data, int x, int y);
+
+//*************** utils.c *****************
+
+void	free_ptr(char **ptr);
+int		map_len(char *map);
+char	*get_line(char *str);
 
 #endif

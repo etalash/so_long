@@ -1,59 +1,56 @@
-# Compiler and flags
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror
 
-# Executable name
 NAME = so_long
-
-# Directories (no src folder)
-MLX_DIR = lib/minilibx-linux
-LIBFT_DIR = lib/libft
-
-# Sources and Objects (no src folder)
-SRCS = main.c check.c draw.c errors.c frees.c ft_strjoinfree.c \
-       key_hook.c map_validity.c window.c xpms_into_image.c
+SRC_DIR = src
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/utils.c $(SRC_DIR)/display.c \
+		$(SRC_DIR)/movements.c $(SRC_DIR)/valid_map.c $(SRC_DIR)/flood_fill.c $(SRC_DIR)/map_init.c
 OBJ = $(SRCS:.c=.o)
 
-# Libraries
-MLX_LIB = $(MLX_DIR)/libmlx.a
-MLX_HEADER = $(MLX_DIR)
-LIBFT = $(LIBFT_DIR)/libft.a
+MLX_HEADER = lib/MLX42/include/MLX42
+MLX_LIB = lib/MLX42/build
 
-# Linking flags (for X11, pthread, and math library)
-LDFLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm -lbsd -I$(MLX_HEADER)
+LIBFT_DIR = lib/libft
+LIBFT_NAME = libft.a
+LIBFT = $(LIBFT_DIR)/$(LIBFT_NAME)
 
-# Default target
-all: $(NAME)
+FT_PRINTF_DIR = lib/ft_printf
+FT_PRINTF_NAME = libftprintf.a
+FT_PRINTF = $(FT_PRINTF_DIR)/$(FT_PRINTF_NAME)
 
-# Build rule for object files (no src folder)
-%.o: %.c
-	$(CC) $(CFLAGS) -I $(MLX_HEADER) -c $< -o $@
+all: $(NAME) $(LIBFT) $(FT_PRINTF)
 
-# Build rule for the executable
-$(NAME): $(OBJ) $(LIBFT) $(MLX_LIB)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(LDFLAGS) -o $(NAME)
+$(SRC_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-# Build libft if necessary
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 
-# Build the minilibx-linux library
-$(MLX_LIB):
-	git clone git@github.com:42Paris/minilibx-linux.git $(MLX_DIR)
-	make -C $(MLX_DIR)
+$(FT_PRINTF):
+	make -C $(FT_PRINTF_DIR)
 
-# Clean object files and minilibx-linux
+$(NAME): $(OBJ) $(LIBFT) $(FT_PRINTF)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(FT_PRINTF) -I $(MLX_HEADER) -L $(MLX_LIB) -lmlx42 -lglfw -pthread -lm -o $(NAME)
+
+mlx :
+	cd lib && git clone https://github.com/ashirzad313/MLX42.git
+
+clean_mlx :
+	rm -rf lib/MLX42
+
 clean:
 	rm -f $(OBJ)
 	make clean -C $(LIBFT_DIR)
-	make clean -C $(MLX_DIR)
+	make clean -C $(FT_PRINTF_DIR)
 
-# Full cleanup (objects and executable)
-fclean: clean
-	rm -f $(NAME)
+fclean:
+	rm -f $(OBJ) $(NAME)
 	make fclean -C $(LIBFT_DIR)
+	make fclean -C $(FT_PRINTF_DIR)
 
-# Rebuild everything
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all mlx, mlx_clean clean fclean re
+
+
+
